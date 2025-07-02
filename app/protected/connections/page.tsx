@@ -43,7 +43,7 @@ const Connections = () => {
         if (connError) throw connError
         // Get the other user ids
         const otherUserIds = (conns as Connection[]).map((c) => {
-          // @ts-expect-error: Supabase returns records as generic objects, so we assert Connection type for mapping user ids
+
           return c.user1_id === user.id ? c.user2_id : c.user1_id;
         });
         let profiles: Profile[] = []

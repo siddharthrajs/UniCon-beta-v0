@@ -8,7 +8,13 @@ import { createClient } from '@/lib/client'
 import { Calendar, Link as LinkIcon, CheckCircle2 } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
-export default async function ProfilePage({ params }: { params: { handle: string } }) {
+interface PageProps {
+  params: {
+    handle: string;
+  };
+}
+
+export default async function ProfilePage({ params }: PageProps) {
   const supabase = createClient()
   const { data: profile } = await supabase
     .from('profiles')
