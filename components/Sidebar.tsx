@@ -2,10 +2,9 @@
 import React from 'react'
 import { LogoutButton } from './logout-button'
 import Link from 'next/link'
-import { Card, CardHeader, CardTitle, CardDescription } from './ui/card'
-import { Button } from './ui/button'
+import { Card, CardTitle, CardDescription } from './ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'
-import { Home, Heart, Users, User, LogOut, Plus, UserPlus, Mail, Link2, MessageCircle } from 'lucide-react'
+import { Home, Heart, Users, User, Mail, Link2, MessageCircle } from 'lucide-react'
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/client';
 import { usePathname } from 'next/navigation';
@@ -20,8 +19,14 @@ const navLinks = [
   { label: 'Profile', icon: User, href: '/protected/profile' },
 ]
 
+interface Profile {
+  avatar?: string;
+  name?: string;
+  handle?: string;
+}
+
 const Sidebar = () => {
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {

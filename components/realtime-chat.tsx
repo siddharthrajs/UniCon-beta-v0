@@ -21,16 +21,6 @@ interface RealtimeChatProps {
   messages?: ChatMessage[]
 }
 
-// Message type based on @/tables/messages.txt
-interface Message {
-  id: string;
-  room: string;
-  sender_id: string | null;
-  content: string;
-  created_at: string;
-  sender_name: string | null;
-}
-
 /**
  * Realtime chat component
  * @param roomName - The name of the room to join. Each room is a unique chat.
@@ -73,7 +63,7 @@ export const RealtimeChat = ({
         .order('created_at', { ascending: true })
       if (!error && data) {
         setHistory(
-          data.map((msg: any) => ({
+          data.map((msg: { id: string; content: string; sender_name: string | null; created_at: string }) => ({
             id: msg.id,
             content: msg.content,
             user: { name: msg.sender_name || 'Unknown' },

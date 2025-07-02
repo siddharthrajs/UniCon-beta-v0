@@ -33,7 +33,7 @@ export default function Footer() {
           viewport={{ once: true }}
           className="flex gap-6"
         >
-          {socials.map((s, i) => (
+          {socials.map((s) => (
             <motion.a
               key={s.label}
               href={s.href}

@@ -4,9 +4,25 @@ import { createClient } from '@/lib/client'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 
+interface Profile {
+  id: string;
+  handle: string;
+  name: string;
+  avatar: string;
+}
+
+interface Connection {
+  id: string;
+  user1_id: string;
+  user2_id: string;
+  type: string;
+  user?: Profile;
+  [key: string]: unknown;
+}
+
 const Requests = () => {
-  const [incoming, setIncoming] = useState<any[]>([])
-  const [outgoing, setOutgoing] = useState<any[]>([])
+  const [incoming, setIncoming] = useState<Connection[]>([])
+  const [outgoing, setOutgoing] = useState<Connection[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,13 +42,13 @@ const Requests = () => {
           .eq('type', 'pending')
         if (connError) throw connError
         // Separate incoming and outgoing
-        const incomingReqs = connections.filter((c: any) => c.user2_id === user.id)
-        const outgoingReqs = connections.filter((c: any) => c.user1_id === user.id)
+        const incomingReqs = (connections as Connection[]).filter((c) => c.user2_id === user.id)
+        const outgoingReqs = (connections as Connection[]).filter((c) => c.user1_id === user.id)
         // Fetch profiles for incoming
-        const incomingUserIds = incomingReqs.map((c: any) => c.user1_id)
-        const outgoingUserIds = outgoingReqs.map((c: any) => c.user2_id)
-        let incomingProfiles: any[] = []
-        let outgoingProfiles: any[] = []
+        const incomingUserIds = incomingReqs.map((c) => c.user1_id)
+        const outgoingUserIds = outgoingReqs.map((c) => c.user2_id)
+        let incomingProfiles: Profile[] = []
+        let outgoingProfiles: Profile[] = []
         if (incomingUserIds.length > 0) {
           const { data } = await supabase.from('profiles').select('id, handle, name, avatar').in('id', incomingUserIds)
           incomingProfiles = data || []
@@ -42,16 +58,16 @@ const Requests = () => {
           outgoingProfiles = data || []
         }
         // Attach profile info
-        setIncoming(incomingReqs.map((req: any) => ({
+        setIncoming(incomingReqs.map((req) => ({
           ...req,
           user: incomingProfiles.find((p) => p.id === req.user1_id)
         })))
-        setOutgoing(outgoingReqs.map((req: any) => ({
+        setOutgoing(outgoingReqs.map((req) => ({
           ...req,
           user: outgoingProfiles.find((p) => p.id === req.user2_id)
         })))
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err) {
+        setError((err as Error).message)
       } finally {
         setLoading(false)
       }

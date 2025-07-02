@@ -18,7 +18,6 @@ interface Connection {
   user2_id: string;
   type: string;
   user?: Profile;
-  [key: string]: any;
 }
 
 const Connections = () => {
@@ -44,7 +43,7 @@ const Connections = () => {
         if (connError) throw connError
         // Get the other user ids
         const otherUserIds = (conns as Connection[]).map((c) => {
-          // @ts-expect-error
+          // @ts-expect-error: Supabase returns records as generic objects, so we assert Connection type for mapping user ids
           return c.user1_id === user.id ? c.user2_id : c.user1_id;
         });
         let profiles: Profile[] = []
@@ -57,8 +56,8 @@ const Connections = () => {
           ...conn,
           user: profiles.find((p) => p.id === (conn.user1_id === user.id ? conn.user2_id : conn.user1_id))
         })))
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err) {
+        setError((err as Error).message)
       } finally {
         setLoading(false)
       }
