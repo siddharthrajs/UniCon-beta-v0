@@ -11,7 +11,21 @@ import { Switch } from '@/components/ui/switch'
 import { Pencil, CheckCircle2, User2, Heart, Users, Eye, Lock, Edit3 } from 'lucide-react'
 import { createClient } from '@/lib/client'
 
-const defaultProfile = {
+// Define a Profile type to avoid 'any' usage
+interface Profile {
+  avatar: string
+  handle: string
+  name: string
+  email: string
+  branch: string
+  year: string
+  gender: string
+  bio: string
+  interests: string[]
+  is_verified: boolean
+}
+
+const defaultProfile: Profile = {
   avatar: '/avatar.png',
   handle: '',
   name: '',
@@ -25,7 +39,7 @@ const defaultProfile = {
 }
 
 const Profile = () => {
-  const [profile, setProfile] = useState<any>(defaultProfile)
+  const [profile, setProfile] = useState<Profile>(defaultProfile)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
@@ -50,7 +64,7 @@ const Profile = () => {
           setProfile({ ...defaultProfile, ...data })
         }
       } catch (err: any) {
-        setError(err.message)
+        setError((err as Error).message)
       } finally {
         setLoading(false)
       }
@@ -60,16 +74,16 @@ const Profile = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setProfile((prev: any) => ({ ...prev, [name]: value }))
+    setProfile((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target
-    setProfile((prev: any) => ({ ...prev, [name]: value }))
+    setProfile((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleInterestsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProfile((prev: any) => ({ ...prev, interests: e.target.value.split(',').map((i) => i.trim()) }))
+    setProfile((prev) => ({ ...prev, interests: e.target.value.split(',').map((i) => i.trim()) }))
   }
 
   const handleSave = async () => {
@@ -86,7 +100,7 @@ const Profile = () => {
         .upsert(updateData)
       if (updateError) throw updateError
     } catch (err: any) {
-      setError(err.message)
+      setError((err as Error).message)
     } finally {
       setSaving(false)
     }

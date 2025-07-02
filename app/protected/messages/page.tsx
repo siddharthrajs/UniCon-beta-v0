@@ -4,12 +4,18 @@ import React, { useEffect, useState } from 'react'
 import { RealtimeChat } from '@/components/realtime-chat'
 import { createClient } from '@/lib/client'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Card } from '@/components/ui/card'
 
 interface ConnectedUser {
   id: string
   handle: string
   avatar: string
+}
+
+interface Connection {
+  id: string;
+  user1_id: string;
+  user2_id: string;
+  type: string;
 }
 
 const Messages = () => {
@@ -45,7 +51,7 @@ const Messages = () => {
           .eq('type', 'accepted')
         if (connError) throw connError
         // Get the IDs of connected users
-        const otherUserIds = connections.map((conn: any) =>
+        const otherUserIds = (connections as Connection[]).map((conn) =>
           conn.user1_id === user.id ? conn.user2_id : conn.user1_id
         )
         if (otherUserIds.length === 0) {
@@ -62,8 +68,8 @@ const Messages = () => {
         if (profilesError) throw profilesError
         setConnectedUsers(profiles)
         setSelectedUser(profiles[0] || null)
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err) {
+        setError((err as Error).message)
       } finally {
         setLoading(false)
       }
