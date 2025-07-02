@@ -7,8 +7,19 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
+type UserProfile = {
+  id: string;
+  avatar?: string;
+  handle?: string;
+  bio?: string;
+  height?: string;
+  branch?: string;
+  interests?: string[] | string;
+  [key: string]: any;
+};
+
 const Love = () => {
-  const [profiles, setProfiles] = useState<unknown[]>([]);
+  const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const [gender, setGender] = useState<'all' | 'male' | 'female'>('all');
 
   useEffect(() => {
@@ -47,17 +58,23 @@ const Love = () => {
         </Button>
       </div>
       <div className="flex flex-wrap gap-6 p-6 justify-center">
-        {profiles.map((profile: unknown, idx: number) => (
+        {profiles.map((profile: UserProfile, idx: number) => (
           <ProfileCard
             key={profile.id || idx}
             user={{
               id: profile.id,
               avatarUrl: profile.avatar || '/avatar.png',
               username: profile.handle || 'unknown',
+              name: profile.name || profile.handle || 'unknown',
               bio: profile.bio || '',
               height: profile.height || '',
               branch: profile.branch || '',
-              interests: profile.interests ? (Array.isArray(profile.interests) ? profile.interests : profile.interests.split(',')) : [],
+              interests: profile.interests ? (Array.isArray(profile.interests) ? profile.interests : typeof profile.interests === 'string' ? profile.interests.split(',') : []) : [],
+              gender: profile.gender || 'other',
+              year: profile.year || '',
+              handle: profile.handle,
+              email: profile.email || '',
+              is_verified: !!profile.is_verified,
             }}
           />
         ))}

@@ -4,7 +4,23 @@ import { ProfileCard } from '@/components/profile-card';
 import { createClient } from '@/lib/client';
 
 const Home = () => {
-  const [profiles, setProfiles] = useState<unknown[]>([]);
+  type UserProfile = {
+    id: string;
+    avatar?: string;
+    handle?: string;
+    name?: string;
+    bio?: string;
+    height?: string;
+    branch?: string;
+    interests?: string[] | string;
+    gender?: string;
+    year?: string;
+    email?: string;
+    is_verified?: boolean;
+    [key: string]: any;
+  };
+
+  const [profiles, setProfiles] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +56,7 @@ const Home = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-      {profiles.map((profile: unknown) => (
+      {profiles.map((profile: UserProfile) => (
         <ProfileCard
           key={profile.id}
           user={{

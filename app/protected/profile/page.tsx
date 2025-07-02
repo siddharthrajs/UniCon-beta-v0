@@ -58,7 +58,7 @@ const Profile = () => {
           .maybeSingle()
         if (profileError) throw profileError
         if (!data) {
-          setProfile({ ...defaultProfile, email: user.email, handle: '', name: '' })
+          setProfile({ ...defaultProfile, email: user.email || '', handle: '', name: '' })
         } else {
           setProfile({ ...defaultProfile, ...data })
         }
